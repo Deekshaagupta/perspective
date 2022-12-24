@@ -228,10 +228,6 @@ if(PSP_PYTHON_BUILD AND MACOS)
     set(CMAKE_USE_PTHREADS_INIT 1)
     set(THREADS_PREFER_PTHREAD_FLAG ON)
 
-    # don't link against build python
-    # https://blog.tim-smith.us/2015/09/python-extension-modules-os-x/
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -undefined dynamic_lookup")
-
     check_c_compiler_flag("-arch x86_64" x86_64Supported)
     check_c_compiler_flag("-arch arm64" arm64Supported)
 
@@ -697,6 +693,13 @@ elseif(PSP_CPP_BUILD OR PSP_PYTHON_BUILD)
 
         target_link_libraries(binding psp)
 
+
+        # don't link against build python
+        # https://blog.tim-smith.us/2015/09/python-extension-modules-os-x/
+        target_link_options(psp PRIVATE -undefined dynamic_lookup)
+        target_link_options(binding PRIVATE -undefined dynamic_lookup)
+        target_compile_options(psp PRIVATE -fvisibility=hidden)
+        target_compile_options(binding PRIVATE -fvisibility=hidden)
         # The compiled libraries will be put in CMAKE_LIBRARY_OUTPUT_DIRECTORY by default. In the
         # setup.py file, we designate this to be in the build/lib.<platform> directory. However,
         # since we want to be able to test perspective in-source, we also copy the libraries into

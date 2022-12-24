@@ -11,7 +11,7 @@
 
 namespace perspective {
 
-class PerspectiveException : public std::exception {
+class __attribute__((visibility("default"))) PerspectiveException : public std::exception {
 public:
     explicit PerspectiveException(const char* m)
         : message{m} {}
